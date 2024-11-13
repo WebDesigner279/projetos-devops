@@ -24,7 +24,8 @@ body {
   }
 
 .text-center {
-  margin-bottom: 36px;
+  margin-top: 32px;
+  margin-bottom: 32px;
 }
 /* Ajustes para dispositivos móveis */
 @media (max-width: 768px) {
