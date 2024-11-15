@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Veículos</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/sis-cadastro-de-veiculos/style.css">
-   
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
 <div class="container">
     <div class="form-container">
         <h2 class="text-center">Autorização de Veículos</h2>
@@ -17,96 +15,82 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="vehicleType">Tipo de Veículo</label>
-                    <input type="text" class="form-control" id="vehicleType" placeholder="Ex: Carro, Moto" required>
+                    <input type="text" class="form-control" id="vehicleType" placeholder="Carro/Moto" required>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="plate">Placa</label>
-                    <input type="text" class="form-control" id="plate" placeholder="Ex: ABC-1234" required>
+                    <input type="text" class="form-control" id="plate" placeholder="ABC-1234" required>
                 </div>
                 <div class="form-group col-md-4">
                     <label for="color">Cor</label>
-                    <input type="text" class="form-control" id="color" placeholder="Ex: Vermelho, Azul" required>
+                    <input type="text" class="form-control" id="color" placeholder="Vermelho" required>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="owner">Nome do Proprietário</label>
-                    <input type="text" class="form-control" id="owner" placeholder="Nome do Proprietário" required>
+                    <label for="owner">Proprietário</label>
+                    <input type="text" class="form-control" id="owner" placeholder="Proprietário" required>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="apartment">Nº do Apartamento</label>
-                    <input type="number" class="form-control" id="apartment" placeholder="Ex: 101" min="1" max="999" required>
+                    <label for="apartment">Apartamento</label>
+                    <input type="number" class="form-control" id="apartment" placeholder="101" min="1" max="999" required>
                 </div>
                 <div class="form-group col-md-3">
-                    <label for="block">Nº do Bloco</label>
-                    <input type="number" class="form-control" id="block" placeholder="Ex: 10" min="1" max="99" required>
+                    <label for="block">Bloco</label>
+                    <input type="number" class="form-control" id="block" placeholder="10" min="1" max="99" required>
                 </div>
-
+            </div>
+            <div class="form-row">
                 <div class="form-group col-md-4">
-                    <label for="parkingSpot">Número da Vaga</label>
+                    <label for="parkingSpot">Nº da Vaga</label>
                     <input type="number" class="form-control" id="parkingSpot" placeholder="0000" min="1" max="9999" required>
                 </div>
-
-
-                <div class="form-row">
-                    <div class="form-group col-md-4">
-                        <label for="entryTime">Horário de Entrada</label>
-                        <input type="time" class="form-control" id="entryTime" required>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="entryDate">Data de Entrada</label>
-                        <input type="date" class="form-control" id="entryDate" required>
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label for="parkingDuration">Duração (minutos)</label>
-                        <input type="number" class="form-control" id="parkingDuration" min="15" max="720" required>
-                    </div>                    
-                    <div class="form-group d-flex justify-content-between">
-                        <button id="btnSalvar" type="submit" class="btn btn-primary">Salvar</button>
-                        <button id="btnCancelar" type="button" class="btn btn-danger">Cancelar Edição</button>
-                    </div>
-                    <!--novo-->
-                    <div class="form-group">
-                        <label for="signatureCanvas">Assinatura</label>
-                        <div id="signatureContainer" class="border">
-                            <canvas id="signatureCanvas"></canvas>
-                        </div>
-                        <button type="button" id="clearSignature" class="btn btn-secondary mt-2">Limpar Assinatura</button>
-                    </div>
+                <div class="form-group col-md-4">
+                    <label for="entryTime">Entrada</label>
+                    <input type="time" class="form-control" id="entryTime" required>
+                </div>
+                <div class="form-group col-md-4">
+                    <label for="entryDate">Data</label>
+                    <input type="date" class="form-control" id="entryDate" required>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-4">
+                    <label for="parkingDuration">Duração (min)</label>
+                    <input type="number" class="form-control" id="parkingDuration" min="15" max="720" required>
+                </div>
+                <div class="form-group col-md-8 d-flex justify-content-between">
+                    <button type="submit" id="btnSalvar" class="btn btn-primary">Salvar</button>
+                    <button type="button" id="btnCancelar" class="btn btn-danger">Cancelar Edição</button>
                 </div>
             </div>
         </form>
     </div>
-
-    <div class="table-container table-responsive">
+    <div class="table-container table-responsive mt-4">
         <h3 class="text-center">Veículos Autorizados</h3>
-        <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar por proprietário, placa ou tipo de veículo">
-        <table class="table table-striped mt-3">
+        <input type="text" id="searchInput" class="form-control mb-2" placeholder="Pesquisar por, veículo, placa, nome. ">
+        <table class="table table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th>Tipo de Veículo</th>
+                    <th>Veículo</th>
                     <th>Placa</th>
                     <th>Cor</th>
                     <th>Proprietário</th>
                     <th>Apto</th>
                     <th>Bloco</th>
                     <th>Vaga</th>
-                    <th>Hora da Entrada</th>
-                    <th>Data de Entrada</th>
+                    <th>Entrada</th>
+                    <th>Data</th>
                     <th>Tempo</th>
                     <th>Ações</th>
                 </tr>
             </thead>
-            <tbody id="vehicleTable">
-                <!-- Dados dos veículos serão inseridos aqui dinamicamente -->
-            </tbody>
+            <tbody id="vehicleTable"></tbody>
         </table>
     </div>
 </div>
-
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

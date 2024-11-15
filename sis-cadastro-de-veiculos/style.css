@@ -17,28 +17,16 @@ body {
 }
 
 #btnSalvar, #btnCancelar {
-  width: auto;
+   /* Aumenta a largura dos botões */
+  height: 40px;
+  margin-left: 32px; /* Espaço consistente entre eles */
+  margin-top: 29px;
 }
 
 #btnCancelar {
-margin-right: 75rem;
+  width: 150px;
+  margin-right: 43rem; 
 }
-
-#signatureContainer {
-  width: 100%;
-  height: 200px;
-  position: relative;
-  overflow: hidden;
-  background: #f8f8f8;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-#signatureCanvas {
-  width: 100%;
-  height: 100%;
-}
-
 
 .table-container {
   margin-top: 20px;
@@ -72,13 +60,22 @@ margin-right: 75rem;
   .form-row .form-group {
       margin-bottom: 15px;
   }
-
-  #btnCancelar {
-    margin-left: 16px;
+    #btnCancelar {
+      height: auto;
+      margin-left: 16px;
     }
 }
+
 /* Ajuste da largura da tabela para dispositivos móveis */
 .table-responsive {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  }
+
+  /* Define o contêiner da tabela com rolagem vertical */
+.table-container {
+  max-height: 400px; /* Define a altura máxima da tabela */
+  overflow-y: auto; /* Habilita o scroll vertical */
+  border: 1px solid #ccc; /* Adiciona uma borda ao contêiner */
+  margin-top: 10px; /* Espaçamento superior */
 }
