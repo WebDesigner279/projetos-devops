@@ -3,6 +3,7 @@ body {
 }
 .container {
   margin-top: 60px;
+  max-width: 1500px;
 }
 .form-container {
   padding: 20px;
@@ -10,6 +11,21 @@ body {
   border-radius: 5px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
+
+#searchInput {
+  width: 387px;
+}
+
+#btnSalvar, #btnCancelar {
+  width: auto;
+  padding-right: 16px;
+}
+
+#btnCancelar {
+margin-right: 75rem;
+
+}
+
 .table-container {
   margin-top: 20px;
 }
@@ -27,17 +43,28 @@ body {
   margin-top: 32px;
   margin-bottom: 32px;
 }
+
+/* botões editar, excluir */
+.actions-cell {
+  display: flex;
+  gap: 8px;
+}
+
 /* Ajustes para dispositivos móveis */
-@media (max-width: 768px) {
+@media (max-width: 1920px) {
   .form-container, .table-container {
       padding: 15px;
   }
   .form-row .form-group {
       margin-bottom: 15px;
   }
+
+  #btnCancelar {
+    margin-left: 16px;
+    }
 }
 /* Ajuste da largura da tabela para dispositivos móveis */
 .table-responsive {
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch; /* Suaviza o scroll em dispositivos móveis */
+  -webkit-overflow-scrolling: touch;
 }

@@ -1,4 +1,3 @@
-// script.js
 
 let editIndex = null; // Índice do item sendo editado, null se for novo
 
@@ -11,29 +10,26 @@ document.getElementById("vehicleForm").addEventListener("submit", function (even
     const owner = document.getElementById("owner").value;
     const apartment = document.getElementById("apartment").value;
     const block = document.getElementById("block").value;
+    const parkingSpot = document.getElementById("parkingSpot").value;
+    const entryTime = document.getElementById("entryTime").value;
+    const entryDate = document.getElementById("entryDate").value;
+    const parkingDuration = parseInt(document.getElementById("parkingDuration").value);
 
-    // Armazena o novo veículo em um objeto
-    const vehicle = { vehicleType, plate, color, owner, apartment, block };
+    // Cria um objeto para o novo veículo
+    const vehicle = { vehicleType, plate, color, owner, apartment, block, parkingSpot, entryTime, entryDate, parkingDuration };
 
     let vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
 
     if (editIndex !== null) {
-        // Se editIndex não for nulo, estamos editando um item existente
-        vehicles[editIndex] = vehicle;
-        editIndex = null; // Resetar editIndex
+        vehicles[editIndex] = vehicle; // Atualiza o item existente
+        editIndex = null;
     } else {
-        // Caso contrário, adicionar um novo item
-        vehicles.push(vehicle);
+        vehicles.push(vehicle); // Adiciona novo item
     }
 
-    // Salvar os dados atualizados no localStorage
-    localStorage.setItem("vehicles", JSON.stringify(vehicles));
-
-    // Atualiza a tabela
-    updateVehicleTable();
-
-    // Limpa o formulário
-    document.getElementById("vehicleForm").reset();
+    localStorage.setItem("vehicles", JSON.stringify(vehicles)); // Salva no localStorage
+    updateVehicleTable(); // Atualiza a tabela
+    document.getElementById("vehicleForm").reset(); // Limpa o formulário
 });
 
 function updateVehicleTable() {
@@ -50,20 +46,35 @@ function updateVehicleTable() {
         row.insertCell(3).innerText = vehicle.owner;
         row.insertCell(4).innerText = vehicle.apartment;
         row.insertCell(5).innerText = vehicle.block;
+        row.insertCell(6).innerText = vehicle.parkingSpot;
+        row.insertCell(7).innerText = vehicle.entryTime;
+        row.insertCell(8).innerText = vehicle.entryDate;
+        row.insertCell(9).innerText = vehicle.parkingDuration;
+
+        // Cria célula de ações com botões de editar e excluir
+        const actionsCell = row.insertCell(10);
+        actionsCell.className = "actions-cell"; // Adiciona a classe para exibir os botões lado a lado
 
         // Botão de edição
-        const editCell = row.insertCell(6);
         const editButton = document.createElement("button");
         editButton.className = "btn btn-warning btn-sm";
         editButton.innerText = "Editar";
         editButton.onclick = function () {
             loadVehicleData(index);
         };
-        editCell.appendChild(editButton);
+        actionsCell.appendChild(editButton);
+
+        // Botão de exclusão
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "btn btn-danger btn-sm";
+        deleteButton.innerText = "Excluir";
+        deleteButton.onclick = function () {
+            deleteVehicle(index);
+        };
+        actionsCell.appendChild(deleteButton);
     });
 }
 
-// Função para carregar os dados no formulário para edição
 function loadVehicleData(index) {
     const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
     const vehicle = vehicles[index];
@@ -74,46 +85,45 @@ function loadVehicleData(index) {
     document.getElementById("owner").value = vehicle.owner;
     document.getElementById("apartment").value = vehicle.apartment;
     document.getElementById("block").value = vehicle.block;
+    document.getElementById("parkingSpot").value = vehicle.parkingSpot;
+    document.getElementById("entryTime").value = vehicle.entryTime;
+    document.getElementById("entryDate").value = vehicle.entryDate;
+    document.getElementById("parkingDuration").value = vehicle.parkingDuration;
 
-    // Armazena o índice do item sendo editado
-    editIndex = index;
+    editIndex = index; // Define o índice para edição
 }
 
-// Função para filtrar veículos
-document.getElementById("searchInput").addEventListener("input", function () {
-    const searchQuery = this.value.toLowerCase();
+function deleteVehicle(index) {
     const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-    const filteredVehicles = vehicles.filter(vehicle => {
-        return (
-            vehicle.vehicleType.toLowerCase().includes(searchQuery) ||
-            vehicle.plate.toLowerCase().includes(searchQuery) ||
-            vehicle.owner.toLowerCase().includes(searchQuery)
-        );
+    vehicles.splice(index, 1); // Remove o veículo do array
+    localStorage.setItem("vehicles", JSON.stringify(vehicles)); // Atualiza o localStorage
+    updateVehicleTable(); // Atualiza a tabela
+}
+
+function filterVehicles() {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+    const rows = document.querySelectorAll("#vehicleTable tr");
+
+    rows.forEach(row => {
+        const [vehicleType, plate, , owner] = row.cells;
+        const text = `${vehicleType.textContent} ${plate.textContent} ${owner.textContent}`.toLowerCase();
+        
+        row.style.display = text.includes(searchInput) ? "" : "none";
     });
+}
 
-    const vehicleTable = document.getElementById("vehicleTable");
-    vehicleTable.innerHTML = "";
-
-    filteredVehicles.forEach((vehicle, index) => {
-        const row = vehicleTable.insertRow();
-
-        row.insertCell(0).innerText = vehicle.vehicleType;
-        row.insertCell(1).innerText = vehicle.plate;
-        row.insertCell(2).innerText = vehicle.color;
-        row.insertCell(3).innerText = vehicle.owner;
-        row.insertCell(4).innerText = vehicle.apartment;
-        row.insertCell(5).innerText = vehicle.block;
-
-        const editCell = row.insertCell(6);
-        const editButton = document.createElement("button");
-        editButton.className = "btn btn-warning btn-sm";
-        editButton.innerText = "Editar";
-        editButton.onclick = function () {
-            loadVehicleData(index);
-        };
-        editCell.appendChild(editButton);
-    });
+    // Manipulador para o botão "Cancelar Edição"
+    document.getElementById("btnCancelar").addEventListener("click", function () {
+    document.getElementById("vehicleForm").reset(); // Limpa o formulário
+    editIndex = null; // Reseta o índice de edição
 });
 
-// Carrega a tabela ao carregar a página
-updateVehicleTable();
+    // Adiciona o evento para o campo de busca
+    document.getElementById("searchInput").addEventListener("input", filterVehicles);
+
+    // Carrega a tabela ao carregar a página
+    updateVehicleTable();
+
+
+
+
