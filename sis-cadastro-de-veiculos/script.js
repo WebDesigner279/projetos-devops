@@ -15,6 +15,67 @@ document.getElementById("vehicleForm").addEventListener("submit", function (even
     const entryDate = document.getElementById("entryDate").value;
     const parkingDuration = parseInt(document.getElementById("parkingDuration").value);
 
+    // Inicializa o Signature Pad
+const canvas = document.getElementById("signatureCanvas");
+const signaturePad = new SignaturePad(canvas);
+
+// Ajusta o tamanho do canvas para ser responsivo
+function resizeCanvas() {
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = canvas.offsetWidth * ratio;
+    canvas.height = canvas.offsetHeight * ratio;
+    canvas.getContext("2d").scale(ratio, ratio);
+    signaturePad.clear(); // Redefine a assinatura
+}
+
+// Redimensiona o canvas ao carregar a página e ao redimensionar
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+// Botão para limpar a assinatura
+document.getElementById("clearSignature").addEventListener("click", () => {
+    signaturePad.clear();
+});
+
+// Salva a assinatura no localStorage com os dados do formulário
+document.getElementById("vehicleForm").addEventListener("submit", function () {
+    if (!signaturePad.isEmpty()) {
+        const signatureData = signaturePad.toDataURL(); // Obtém a assinatura como base64
+        const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+        const vehicleIndex = editIndex !== null ? editIndex : vehicles.length - 1;
+
+        // Adiciona ou atualiza a assinatura no veículo correspondente
+        vehicles[vehicleIndex].signature = signatureData;
+        localStorage.setItem("vehicles", JSON.stringify(vehicles));
+    }
+});
+
+// Exibe a assinatura ao editar
+function loadVehicleData(index) {
+    const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+    const vehicle = vehicles[index];
+
+    // Preenche os campos
+    document.getElementById("vehicleType").value = vehicle.vehicleType;
+    document.getElementById("plate").value = vehicle.plate;
+    // ... (demais campos)
+
+    // Restaura a assinatura
+    if (vehicle.signature) {
+        const img = new Image();
+        img.src = vehicle.signature;
+        img.onload = () => {
+            const context = canvas.getContext("2d");
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(img, 0, 0);
+        };
+    } else {
+        signaturePad.clear();
+    }
+
+    editIndex = index;
+}
+
     // Cria um objeto para o novo veículo
     const vehicle = { vehicleType, plate, color, owner, apartment, block, parkingSpot, entryTime, entryDate, parkingDuration };
 
