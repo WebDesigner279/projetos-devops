@@ -61,11 +61,6 @@ margin-right: 75rem;
   #btnCancelar {
     margin-left: 16px;
     }
-
-    .actions-cell {
-      display: flex;
-      gap: 8px;
-    } 
 }
 /* Ajuste da largura da tabela para dispositivos móveis */
 .table-responsive {
