@@ -1,7 +1,7 @@
 let editIndex = null; // Índice do item sendo editado, null se for novo
 
 // Início da implementação de verificação e bloqueio de sistema após 3 dias de testes
-function iniciarSessao() {
+/* function iniciarSessao() {
     if (!localStorage.getItem('horaInicio')) {
         const agora = new Date().getTime();
         localStorage.setItem('horaInicio', agora);
@@ -35,7 +35,7 @@ iniciarSessao();
 
 const timerVerificacao = setInterval(() => {
     verificarTempoRestante();
-}, 1000 * 60); // Verifica a cada 1 minuto
+}, 1000 * 60); */ // Verifica a cada 1 minuto
 // Fim da implementação de verificação e bloqueio de sistema após 3 dias de testes
 
 document.getElementById("vehicleForm").addEventListener("submit", function (event) {
