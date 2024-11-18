@@ -1,9 +1,7 @@
 let editIndex = null; // Índice do item sendo editado, null se for novo
 
-
 document.getElementById("vehicleForm").addEventListener("submit", function (event) {
    event.preventDefault();
-
 
    const vehicleType = document.getElementById("vehicleType").value;
    const plate = document.getElementById("plate").value;
@@ -16,12 +14,9 @@ document.getElementById("vehicleForm").addEventListener("submit", function (even
    const entryDate = document.getElementById("entryDate").value;
    const parkingDuration = parseInt(document.getElementById("parkingDuration").value);
 
-
    const vehicle = { vehicleType, plate, color, owner, apartment, block, parkingSpot, entryTime, entryDate, parkingDuration };
 
-
    let vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-
 
    if (editIndex !== null) {
        vehicles[editIndex] = vehicle; // Atualiza o item existente
@@ -30,19 +25,16 @@ document.getElementById("vehicleForm").addEventListener("submit", function (even
        vehicles.push(vehicle); // Adiciona novo item
    }
 
-
    localStorage.setItem("vehicles", JSON.stringify(vehicles));
    updateVehicleTable();
    document.getElementById("vehicleForm").reset();
 });
-
 
 // Calcula o tempo excedido
 function calculateExceededTime(entryTime, entryDate, duration) {
    const entryDateTime = new Date(`${entryDate}T${entryTime}`);
    const currentTime = new Date();
    const allowedEndTime = new Date(entryDateTime.getTime() + duration * 60000);
-
 
    if (currentTime > allowedEndTime) {
        const exceededTime = Math.floor((currentTime - allowedEndTime) / 60000);
@@ -51,12 +43,10 @@ function calculateExceededTime(entryTime, entryDate, duration) {
    return 0; // Não excedeu
 }
 
-
 // Atualiza os tempos excedidos
 function updateExceededTimes() {
    const rows = document.querySelectorAll("#vehicleTable tr");
    const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-
 
    rows.forEach((row, index) => {
        if (index < vehicles.length) {
@@ -67,7 +57,6 @@ function updateExceededTimes() {
                vehicle.parkingDuration
            );
 
-
            const exceededCell = row.cells[10];
            exceededCell.innerText = exceededTime > 0 ? `${exceededTime} min` : "No prazo";
            exceededCell.className = exceededTime > 0 ? "text-danger" : "text-success";
@@ -75,17 +64,14 @@ function updateExceededTimes() {
    });
 }
 
-
 // Atualiza a tabela de veículos
 function updateVehicleTable() {
    const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
    const vehicleTable = document.getElementById("vehicleTable");
    vehicleTable.innerHTML = "";
 
-
    vehicles.forEach((vehicle, index) => {
        const row = vehicleTable.insertRow();
-
 
        row.insertCell(0).innerText = vehicle.vehicleType;
        row.insertCell(1).innerText = vehicle.plate;
@@ -98,7 +84,6 @@ function updateVehicleTable() {
        row.insertCell(8).innerText = vehicle.entryDate;
        row.insertCell(9).innerText = `${vehicle.parkingDuration} min`;
 
-
        // Calcula e exibe o tempo excedido inicialmente
        const exceededTime = calculateExceededTime(
            vehicle.entryTime,
@@ -109,11 +94,9 @@ function updateVehicleTable() {
        exceededCell.innerText = exceededTime > 0 ? `${exceededTime} min` : "No prazo";
        exceededCell.className = exceededTime > 0 ? "text-danger" : "text-success";
 
-
        // Cria os botões de ações
        const actionsCell = row.insertCell(11);
        actionsCell.className = "actions-cell";
-
 
        const editButton = document.createElement("button");
        editButton.className = "btn btn-warning btn-sm";
@@ -122,7 +105,6 @@ function updateVehicleTable() {
            loadVehicleData(index);
        };
        actionsCell.appendChild(editButton);
-
 
        const deleteButton = document.createElement("button");
        deleteButton.className = "btn btn-danger btn-sm";
@@ -134,12 +116,10 @@ function updateVehicleTable() {
    });
 }
 
-
 // Carrega os dados no formulário para edição
 function loadVehicleData(index) {
    const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
    const vehicle = vehicles[index];
-
 
    document.getElementById("vehicleType").value = vehicle.vehicleType;
    document.getElementById("plate").value = vehicle.plate;
@@ -156,7 +136,6 @@ function loadVehicleData(index) {
    editIndex = index;
 }
 
-
 // Exclui um veículo
 function deleteVehicle(index) {
    const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
@@ -164,7 +143,6 @@ function deleteVehicle(index) {
    localStorage.setItem("vehicles", JSON.stringify(vehicles));
    updateVehicleTable();
 }
-
 
 // Filtro de veículos na tabela
 function filterVehicles() {
@@ -179,15 +157,12 @@ function filterVehicles() {
    });
 }
 
-
 document.getElementById("btnCancelar").addEventListener("click", function () {
    document.getElementById("vehicleForm").reset();
    editIndex = null;
 });
 
-
 document.getElementById("searchInput").addEventListener("input", filterVehicles);
-
 
 // Atualiza a tabela e o tempo excedido periodicamente
 updateVehicleTable();
