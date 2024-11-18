@@ -1,5 +1,43 @@
 let editIndex = null; // Índice do item sendo editado, null se for novo
 
+// Início da implementação de verificação e bloqueio de sistema após 3 dias de testes
+function iniciarSessao() {
+    if (!localStorage.getItem('horaInicio')) {
+        const agora = new Date().getTime();
+        localStorage.setItem('horaInicio', agora);
+    }
+}
+
+function verificarTempoRestante() {
+    const horaInicio = localStorage.getItem('horaInicio');
+    if (horaInicio) {
+        const agora = new Date().getTime();
+        const tempoDecorrido = (agora - horaInicio) / 1000 / 60; // Converte para minutos
+        const limiteMinutos = 3 * 24 * 60; // 3 dias em minutos (4320)
+
+        if (tempoDecorrido >= limiteMinutos) {
+            bloquearAcesso();
+        } else {
+            const minutosRestantes = Math.ceil(limiteMinutos - tempoDecorrido);
+            console.log(`Tempo restante: ${minutosRestantes} minutos`);
+        }
+    }
+}
+
+function bloquearAcesso() {
+    alert('Seu tempo de teste expirou. Entre em contato para obter acesso completo.');
+    localStorage.removeItem('horaInicio'); // Limpa o registro de início de sessão
+    window.location.href = '/bloqueado.html'; // Redireciona para uma página de bloqueio
+    clearInterval(timerVerificacao); // Cancela o timer de verificação
+}
+
+iniciarSessao();
+
+const timerVerificacao = setInterval(() => {
+    verificarTempoRestante();
+}, 1000 * 60); // Verifica a cada 1 minuto
+// Fim da implementação de verificação e bloqueio de sistema após 3 dias de testes
+
 document.getElementById("vehicleForm").addEventListener("submit", function (event) {
    event.preventDefault();
 
