@@ -68,39 +68,50 @@ document.getElementById("vehicleForm").addEventListener("submit", function (even
    document.getElementById("vehicleForm").reset();
 });
 
-// Calcula o tempo excedido
-function calculateExceededTime(entryTime, entryDate, duration) {
-   const entryDateTime = new Date(`${entryDate}T${entryTime}`);
-   const currentTime = new Date();
-   const allowedEndTime = new Date(entryDateTime.getTime() + duration * 60000);
+// Calcula o tempo excedido em minutos
+function calculateExceededTime(entryTime, entryDate, durationMinutes) {
+    const entryDateTime = new Date(`${entryDate}T${entryTime}`);
+    const currentTime = new Date();
+    const allowedEndTime = new Date(entryDateTime.getTime() + durationMinutes * 60000);
 
-   if (currentTime > allowedEndTime) {
-       const exceededTime = Math.floor((currentTime - allowedEndTime) / 60000);
-       return exceededTime; // Tempo excedido em minutos
-   }
-   return 0; // Não excedeu
+    if (currentTime > allowedEndTime) {
+        const exceededTime = Math.floor((currentTime - allowedEndTime) / 60000);
+        return exceededTime; // Tempo excedido em minutos
+    }
+    return 0; // No prazo
 }
 
 // Atualiza os tempos excedidos
 function updateExceededTimes() {
-   const rows = document.querySelectorAll("#vehicleTable tr");
-   const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
-
-   rows.forEach((row, index) => {
-       if (index < vehicles.length) {
-           const vehicle = vehicles[index];
-           const exceededTime = calculateExceededTime(
-               vehicle.entryTime,
-               vehicle.entryDate,
-               vehicle.parkingDuration
-           );
-
-           const exceededCell = row.cells[10];
-           exceededCell.innerText = exceededTime > 0 ? `${exceededTime} min` : "No prazo";
-           exceededCell.className = exceededTime > 0 ? "text-danger" : "text-success";
-       }
-   });
-}
+    const rows = document.querySelectorAll("#vehicleTable tr");
+    const vehicles = JSON.parse(localStorage.getItem("vehicles")) || [];
+ 
+    rows.forEach((row, index) => {
+        if (index < vehicles.length) {
+            const vehicle = vehicles[index];
+            const exceededTime = calculateExceededTime(
+                vehicle.entryTime,
+                vehicle.entryDate,
+                vehicle.parkingDuration
+            );
+ 
+            const exceededCell = row.cells[10];
+            if (exceededTime > 0) {
+                if (exceededTime >= 60) {
+                    const hours = Math.floor(exceededTime / 60);
+                    const minutes = exceededTime % 60;
+                    exceededCell.innerText = `${hours}h ${minutes}min`;
+                } else {
+                    exceededCell.innerText = `${exceededTime} min`;
+                }
+                exceededCell.className = "text-danger";
+            } else {
+                exceededCell.innerText = "No prazo";
+                exceededCell.className = "text-success";
+            }
+        }
+    });
+ }
 
 // Atualiza a tabela de veículos
 function updateVehicleTable() {
@@ -124,13 +135,25 @@ function updateVehicleTable() {
 
        // Calcula e exibe o tempo excedido inicialmente
        const exceededTime = calculateExceededTime(
-           vehicle.entryTime,
-           vehicle.entryDate,
-           vehicle.parkingDuration
-       );
-       const exceededCell = row.insertCell(10);
-       exceededCell.innerText = exceededTime > 0 ? `${exceededTime} min` : "No prazo";
-       exceededCell.className = exceededTime > 0 ? "text-danger" : "text-success";
+        vehicle.entryTime,
+        vehicle.entryDate,
+        vehicle.parkingDuration
+    );
+    const exceededCell = row.insertCell(10);
+
+    if (exceededTime > 0) {
+        if (exceededTime >= 60) {
+            const hours = Math.floor(exceededTime / 60);
+            const minutes = exceededTime % 60;
+            exceededCell.innerText = `${hours}h ${minutes}min`;
+        } else {
+            exceededCell.innerText = `${exceededTime} min`;
+        }
+        exceededCell.className = "text-danger";
+    } else {
+        exceededCell.innerText = "No prazo";
+        exceededCell.className = "text-success";
+    }
 
        // Cria os botões de ações
        const actionsCell = row.insertCell(11);
@@ -170,7 +193,6 @@ function loadVehicleData(index) {
    document.getElementById("entryDate").value = vehicle.entryDate;
    document.getElementById("parkingDuration").value = vehicle.parkingDuration;
 
-
    editIndex = index;
 }
 
@@ -205,6 +227,5 @@ document.getElementById("searchInput").addEventListener("input", filterVehicles)
 // Atualiza a tabela e o tempo excedido periodicamente
 updateVehicleTable();
 setInterval(updateExceededTimes, 60000);
-
 
 
